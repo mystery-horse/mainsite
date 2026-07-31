@@ -1,0 +1,573 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mystery Horse — Project Bible</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300..900;1,9..144,300..900&family=Karla:ital,wght@0,300..800;1,300..800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#141520;
+    --ink-2:#191b27;
+    --panel:#1d2130;
+    --panel-2:#232739;
+    --line: rgba(236,230,216,0.11);
+    --parchment:#ece6d8;
+    --parchment-dim: rgba(236,230,216,0.64);
+    --parchment-faint: rgba(236,230,216,0.38);
+
+    --thread:#c9a876;      /* Horse / Self / melodic layer */
+    --thread-dim: rgba(201,168,118,0.16);
+    --thread-line: rgba(201,168,118,0.55);
+
+    --ember:#b46247;       /* Man / ego / male vocal */
+    --ember-dim: rgba(180,98,71,0.18);
+
+    --voice:#8ba0b8;       /* Voice / anima / female vocal */
+    --voice-dim: rgba(139,160,184,0.18);
+
+    --rhythm:#9aa0b3;      /* neutral rhythm layer */
+    --rhythm-dim: rgba(154,160,179,0.14);
+
+    --serif: "Fraunces", Georgia, "Iowan Old Style", serif;
+    --sans: "Karla", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+    --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  }
+
+  *{ box-sizing:border-box; }
+  html{ scroll-behavior:smooth; }
+  body{
+    margin:0;
+    background:var(--ink);
+    color:var(--parchment);
+    font-family:var(--sans);
+    font-size:16px;
+    line-height:1.6;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{ color:var(--thread); text-decoration-color: rgba(201,168,118,0.4); }
+  a:hover{ text-decoration-color: var(--thread); }
+  a:focus-visible, button:focus-visible{ outline:2px solid var(--thread); outline-offset:3px; }
+
+  h1,h2,h3{ font-family:var(--serif); font-weight:700; color:var(--parchment); margin:0; }
+  .eyebrow{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.14em; text-transform:uppercase;
+    color:var(--thread); display:block; margin-bottom:.6rem;
+  }
+
+  /* ---------- Nav ---------- */
+  nav.toc{
+    position:sticky; top:0; z-index:40;
+    background:rgba(20,21,32,0.92); backdrop-filter: blur(6px);
+    border-bottom:1px solid var(--line);
+    overflow-x:auto; white-space:nowrap;
+  }
+  nav.toc .toc-inner{ display:inline-flex; gap:1.6rem; padding: .85rem 1.5rem; }
+  nav.toc a{
+    font-family:var(--mono); font-size:.74rem; letter-spacing:.06em; text-transform:uppercase;
+    color: var(--parchment-dim); text-decoration:none; border-bottom:1px solid transparent; padding-bottom:2px;
+  }
+  nav.toc a:hover{ color:var(--thread); border-bottom-color:var(--thread); }
+
+  /* ---------- Hero ---------- */
+  .hero{
+    position:relative; overflow:hidden;
+    padding: 6.5rem 1.5rem 5rem;
+    text-align:center;
+    border-bottom:1px solid var(--line);
+    background: radial-gradient(ellipse at 50% -10%, #23283b 0%, var(--ink) 60%);
+  }
+  .hero svg.threads{ position:absolute; inset:0; width:100%; height:100%; opacity:.5; }
+  .hero-content{ position:relative; max-width:760px; margin:0 auto; }
+  .hero .eyebrow{ text-align:center; }
+  .hero h1{
+    font-size: clamp(2.6rem, 6vw, 4.6rem); line-height:1.02; letter-spacing:-.01em;
+    font-optical-sizing:auto;
+  }
+  .hero .sub{
+    font-family:var(--serif); font-style:italic; font-weight:400; color: var(--parchment-dim);
+    font-size:1.25rem; margin-top:1rem;
+  }
+  .hero p.logline{ margin-top:1.6rem; font-size:1.05rem; color:var(--parchment-dim); max-width:560px; margin-left:auto; margin-right:auto; }
+  .facts-row{ display:flex; flex-wrap:wrap; justify-content:center; gap:.6rem; margin-top:2.2rem; }
+  .fact{
+    font-family:var(--mono); font-size:.72rem; letter-spacing:.05em; text-transform:uppercase;
+    color:var(--parchment-dim); border:1px solid var(--line); border-radius:999px; padding:.45rem .9rem;
+  }
+
+  /* ---------- Layout / spine ---------- */
+  main{ position:relative; max-width:900px; margin:0 auto; padding: 3.5rem 1.5rem 3.5rem 76px; }
+  .spine{ position:absolute; left:26px; top:0; bottom:0; width:1px;
+    background: linear-gradient(to bottom, transparent, var(--thread-line) 4%, var(--thread-line) 96%, transparent);
+  }
+  section{ position:relative; margin-bottom:4.4rem; scroll-margin-top: 4.5rem; }
+  section > h2{ position:relative; font-size:1.7rem; margin-bottom:1.4rem; }
+  section > h2::before{
+    content:''; position:absolute; left:-50px; top:8px; width:9px; height:9px; border-radius:50%;
+    background:var(--thread); box-shadow:0 0 10px 2px var(--thread-dim);
+    animation: pulse 4.5s ease-in-out infinite;
+  }
+  @keyframes pulse{
+    0%,100%{ opacity:.55; box-shadow:0 0 8px 1px var(--thread-dim); }
+    50%{ opacity:1; box-shadow:0 0 16px 4px var(--thread-dim); }
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{ scroll-behavior:auto; }
+    *{ animation:none !important; transition:none !important; }
+  }
+
+  p{ margin: 0 0 1rem; color:var(--parchment); }
+  .lede{ color:var(--parchment-dim); font-size:.98rem; max-width:640px; }
+  .note{
+    font-size:.92rem; color:var(--parchment-dim); border-left:2px solid var(--line);
+    padding: .2rem 0 .2rem 1rem; font-style:italic; margin-bottom:1.6rem;
+  }
+
+  ul.plain{ list-style:none; margin:0; padding:0; }
+  ul.plain li{
+    position:relative; padding-left:1.3rem; margin-bottom:.7rem; color:var(--parchment);
+  }
+  ul.plain li::before{
+    content:''; position:absolute; left:0; top:.6em; width:5px; height:5px; border-radius:50%;
+    background:var(--thread);
+  }
+
+  /* ---------- Diagram ---------- */
+  .diagram-wrap{ margin: 1.6rem 0 2rem; }
+  .diagram-wrap svg{ width:100%; height:auto; display:block; }
+  .triad-caption{ display:flex; justify-content:space-between; font-family:var(--mono); font-size:.72rem;
+    letter-spacing:.06em; text-transform:uppercase; color:var(--parchment-faint); margin-top:.6rem; }
+
+  /* ---------- Character cards ---------- */
+  .char-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-top:1.6rem; }
+  .char-card{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1.3rem 1.3rem 1.4rem;
+    border-top:3px solid var(--c, var(--thread)); }
+  .char-card h3{ font-size:1.05rem; margin-bottom:.5rem; }
+  .char-card .role{ font-family:var(--mono); font-size:.68rem; letter-spacing:.08em; text-transform:uppercase; color:var(--c, var(--thread)); display:block; margin-bottom:.6rem; }
+  .char-card p{ font-size:.92rem; color:var(--parchment-dim); margin-bottom:.6rem; }
+  .char-card ul.plain li{ font-size:.9rem; color:var(--parchment-dim); }
+  .char-card.horse{ --c: var(--thread); }
+  .char-card.man{ --c: var(--ember); }
+  .char-card.voice{ --c: var(--voice); }
+
+  /* ---------- Pull quote ---------- */
+  .pull{ font-family:var(--serif); font-style:italic; font-size:1.5rem; line-height:1.4; color:var(--parchment);
+    max-width:600px; border-left:2px solid var(--thread); padding-left:1.2rem; }
+
+  /* ---------- Key / legend ---------- */
+  .key-group{ margin-bottom:1.5rem; }
+  .key-group h4{ font-family:var(--mono); font-size:.72rem; letter-spacing:.1em; text-transform:uppercase;
+    color:var(--parchment-faint); margin:0 0 .7rem; font-weight:500; }
+  .key-row{ display:flex; gap:.9rem; align-items:baseline; padding:.5rem 0; border-bottom:1px solid var(--line); }
+  .key-row:last-child{ border-bottom:none; }
+  .key-row .desc{ font-size:.88rem; color:var(--parchment-dim); }
+  .key-row .name{ font-size:.88rem; color:var(--parchment); min-width:150px; flex-shrink:0; }
+
+  .chip{
+    font-family:var(--mono); font-size:.68rem; letter-spacing:.04em; font-weight:500;
+    display:inline-flex; align-items:center; border-radius:999px; padding:.3rem .65rem;
+    border:1px solid transparent; white-space:nowrap;
+  }
+  .chip--melodic{ background:var(--thread-dim); color:var(--thread); }
+  .chip--rhythm{ background:var(--rhythm-dim); color:var(--rhythm); }
+  .chip--vox-f{ background:var(--voice-dim); color:var(--voice); }
+  .chip--vox-m{ background:var(--ember-dim); color:var(--ember); }
+  .chip--motif{ background:var(--thread); color:var(--ink); font-weight:600; }
+  .chip--technique{ background:transparent; color:var(--parchment-dim); border:1px dashed var(--line); }
+
+  .prod-note{ background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:1.1rem 1.3rem; margin-top:1.6rem; }
+  .prod-note h4{ font-family:var(--mono); font-size:.7rem; letter-spacing:.08em; text-transform:uppercase; color:var(--parchment-faint); margin:0 0 .6rem; }
+  .prod-note ul.plain li{ font-size:.88rem; color:var(--parchment-dim); }
+
+  /* ---------- Track cards ---------- */
+  .track-note{ margin: 1.8rem 0 1.6rem; }
+  .track-grid{ display:grid; grid-template-columns:1fr 1fr; gap:1rem; }
+  .track-card{
+    background:var(--panel); border:1px solid var(--line); border-radius:10px;
+    padding:1.3rem 1.4rem 1.4rem; display:flex; flex-direction:column; gap:.7rem;
+  }
+  .track-card.revelation{ border-color: var(--thread-line); box-shadow: inset 0 0 0 1px rgba(201,168,118,0.12); }
+  .track-card.tbd{ grid-column:1 / -1; background:transparent; border-style:dashed; opacity:.8; }
+  .track-head{ display:flex; align-items:baseline; gap:.7rem; }
+  .track-num{ font-family:var(--mono); font-size:.78rem; color:var(--parchment-faint); }
+  .track-title{ font-family:var(--serif); font-size:1.18rem; font-weight:600; }
+  .track-title .flag{ font-family:var(--mono); font-size:.62rem; letter-spacing:.06em; text-transform:uppercase;
+    color:var(--thread); border:1px solid var(--thread-line); border-radius:999px; padding:.15rem .5rem; margin-left:.5rem; vertical-align:middle; }
+  .track-mood{ font-family:var(--serif); font-style:italic; color:var(--parchment-dim); font-size:.9rem; margin-top:-.4rem; }
+  .track-meta{ display:flex; flex-wrap:wrap; gap:.4rem; }
+  .tag{ font-family:var(--mono); font-size:.66rem; letter-spacing:.03em; color:var(--parchment-dim);
+    border:1px solid var(--line); border-radius:999px; padding:.22rem .55rem; }
+  .track-palette{ display:flex; flex-wrap:wrap; gap:.4rem; }
+  .track-distinct{ font-size:.86rem; color:var(--parchment-dim); }
+  .track-distinct ul{ margin:0; padding-left:1.1rem; }
+  .track-distinct li{ margin-bottom:.35rem; }
+  .track-distinct p{ margin:0; color:var(--parchment-dim); font-size:.86rem; }
+
+  /* ---------- Patterns ---------- */
+  .pattern{ display:flex; gap:1rem; margin-bottom:1.4rem; }
+  .pattern .pnum{ font-family:var(--serif); font-style:italic; font-size:1.5rem; color:var(--thread-line); flex-shrink:0; width:1.6rem; }
+  .pattern p{ margin:0; font-size:.94rem; color:var(--parchment-dim); }
+  .pattern strong{ color:var(--parchment); font-weight:600; }
+
+  /* ---------- Open questions ---------- */
+  .oq-group{ margin-bottom:1.6rem; }
+  .oq-group h4{ font-family:var(--mono); font-size:.72rem; letter-spacing:.08em; text-transform:uppercase; color:var(--thread); margin:0 0 .8rem; }
+  .oq-item{ display:flex; gap:.7rem; align-items:flex-start; margin-bottom:.7rem; }
+  .oq-box{ width:11px; height:11px; border:1px solid var(--parchment-faint); border-radius:2px; margin-top:.35rem; flex-shrink:0; }
+  .oq-item p{ margin:0; font-size:.92rem; color:var(--parchment-dim); }
+
+  footer{ text-align:center; padding: 3rem 1.5rem 4rem; border-top:1px solid var(--line); margin-top:2rem; }
+  footer .mark{ color:var(--thread); font-family:var(--serif); font-style:italic; font-size:.95rem; }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 760px){
+    main{ padding-left:1.25rem; padding-right:1.25rem; }
+    .spine, section > h2::before{ display:none; }
+    .char-grid{ grid-template-columns:1fr; }
+    .track-grid{ grid-template-columns:1fr; }
+    .hero{ padding:4.5rem 1.25rem 3.5rem; }
+  }
+</style>
+</head>
+<body>
+
+<nav class="toc" aria-label="Section navigation">
+  <div class="toc-inner">
+    <a href="#overview">Overview</a>
+    <a href="#symbolism">Symbolic system</a>
+    <a href="#characters">Characters</a>
+    <a href="#themes">Themes</a>
+    <a href="#audience">Audience effect</a>
+    <a href="#music">Music</a>
+    <a href="#patterns">Patterns</a>
+    <a href="#open-questions">Open questions</a>
+  </div>
+</nav>
+
+<header class="hero">
+  <svg class="threads" viewBox="0 0 1200 500" preserveAspectRatio="xMidYMid slice" aria-hidden="true">
+    <g fill="none" stroke="#c9a876" stroke-linecap="round">
+      <path d="M -50 420 C 200 380, 300 460, 560 300 S 900 120, 1250 200" stroke-width="1" opacity="0.18"/>
+      <path d="M -50 460 C 250 440, 320 500, 600 340 S 950 160, 1250 250" stroke-width="1" opacity="0.14"/>
+      <path d="M -50 380 C 180 340, 340 410, 580 260 S 880 90, 1250 160" stroke-width="1" opacity="0.22"/>
+      <path d="M -50 320 C 150 300, 380 360, 620 220 S 860 60, 1250 120" stroke-width="1" opacity="0.16"/>
+      <path d="M -50 250 C 220 260, 400 300, 640 190 S 900 40, 1250 90" stroke-width="1" opacity="0.12"/>
+      <path d="M -50 500 C 260 470, 300 520, 560 380 S 920 200, 1250 300" stroke-width="1.4" opacity="0.28"/>
+      <path d="M -50 200 C 200 220, 420 260, 660 150 S 940 20, 1250 60" stroke-width="1" opacity="0.10"/>
+    </g>
+  </svg>
+  <div class="hero-content">
+    <span class="eyebrow">Project Bible</span>
+    <h1>Mystery Horse</h1>
+    <p class="sub">A wordless, music-driven film</p>
+    <p class="logline">Following a young man and a towering, uncanny creature called The Horse — a story carried entirely by score and song, built for the dark of a theater.</p>
+    <div class="facts-row">
+      <span class="fact">40 minutes</span>
+      <span class="fact">No dialogue</span>
+      <span class="fact">Two characters</span>
+      <span class="fact">Theatrical mix</span>
+      <span class="fact">$100k–250k</span>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="spine" aria-hidden="true"></div>
+
+  <section id="overview">
+    <span class="eyebrow">01</span>
+    <h2>Overview</h2>
+    <p class="lede">Music comes first. The film is built to visually expand what the score already suggests, not the other way around — and it's mixed for impact in a theater, not for streaming, social, or standalone release.</p>
+    <ul class="plain">
+      <li>40 minutes, no dialogue — the story is carried entirely by score and songs</li>
+      <li>Two on-screen characters: the young man, and The Horse</li>
+      <li>Budget: $100k–$250k for production and marketing of the music/film, sourced through local crowdfunding</li>
+    </ul>
+    <p class="note">Tonal touchstones: <em>Into the Wild</em>, grounded, crossed with the mystery and mythic register of <em>Pan's Labyrinth</em>, <em>Inception</em>, and <em>Beasts of the Southern Wild</em>. How far to lean into the mythic side vs. the grounded side ties into the abstraction question in §8.</p>
+  </section>
+
+  <section id="symbolism">
+    <span class="eyebrow">02</span>
+    <h2>The Symbolic System</h2>
+    <p class="lede">This is the spine the rest of the project hangs off, so it's stated once here rather than pieced together from three separate mentions — the Horse's description, a standalone symbolism note, and an orphaned "Whole / Fragment / Channel" line under Themes, which maps directly onto this triad and is folded in below.</p>
+
+    <div class="diagram-wrap">
+      <svg viewBox="0 0 800 220" role="img" aria-label="Diagram showing the Horse's many threads converging through the Voice into a single thread reaching the Man">
+        <defs>
+          <radialGradient id="horseGlow" cx="50%" cy="50%" r="50%">
+            <stop offset="0%" stop-color="#c9a876" stop-opacity="0.9"/>
+            <stop offset="100%" stop-color="#c9a876" stop-opacity="0"/>
+          </radialGradient>
+        </defs>
+        <g fill="none" stroke="#c9a876" stroke-linecap="round" opacity="0.65">
+          <path d="M 110 110 C 220 40, 300 60, 400 108" stroke-width="1"/>
+          <path d="M 110 110 C 220 70, 300 80, 400 108" stroke-width="1"/>
+          <path d="M 110 110 C 220 95, 300 100, 400 108" stroke-width="1"/>
+          <path d="M 110 110 C 220 130, 300 118, 400 108" stroke-width="1"/>
+          <path d="M 110 110 C 220 160, 300 140, 400 108" stroke-width="1"/>
+          <path d="M 110 110 C 220 185, 300 155, 400 108" stroke-width="1"/>
+        </g>
+        <circle cx="110" cy="110" r="34" fill="url(#horseGlow)"/>
+        <circle cx="110" cy="110" r="16" fill="#14151b" stroke="#c9a876" stroke-width="2"/>
+        <circle cx="400" cy="108" r="12" fill="#14151b" stroke="#8ba0b8" stroke-width="2"/>
+        <path d="M 412 108 C 500 108, 560 108, 660 110" fill="none" stroke="#b46247" stroke-width="2" opacity="0.85"/>
+        <circle cx="668" cy="110" r="11" fill="#14151b" stroke="#b46247" stroke-width="2"/>
+        <text x="110" y="165" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="#c9a876" letter-spacing="1">THE HORSE</text>
+        <text x="110" y="181" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#8b8878" letter-spacing="1">SELF — THE WHOLE</text>
+        <text x="400" y="140" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="#8ba0b8" letter-spacing="1">THE VOICE</text>
+        <text x="400" y="156" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#6d7686" letter-spacing="1">ANIMA — THE CHANNEL</text>
+        <text x="668" y="140" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="12" fill="#b46247" letter-spacing="1">THE MAN</text>
+        <text x="668" y="156" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="10" fill="#7d6156" letter-spacing="1">EGO — THE FRAGMENT</text>
+      </svg>
+    </div>
+
+    <p>Whether the audience consciously arrives at this reading is meant to stay ambiguous — mirroring the real uncertainty we have about our own "true" self.</p>
+  </section>
+
+  <section id="characters">
+    <span class="eyebrow">03</span>
+    <h2>Characters</h2>
+    <div class="char-grid">
+      <div class="char-card man">
+        <span class="role">Ego — the fragment</span>
+        <h3>The Human</h3>
+        <p>Young male lead. Still to be developed — background, arc, and specific turning points remain open (§8).</p>
+        <p>What's established so far: the story centers on raw introspection, disturbing realizations, and an ultimate action or revelation.</p>
+      </div>
+      <div class="char-card horse">
+        <span class="role">Self — the whole</span>
+        <h3>The Horse</h3>
+        <ul class="plain">
+          <li>12 feet tall, humanoid — not equine in any way; "Horse" is a title, not a description</li>
+          <li>Limbless, cloak-like, made of thousands of dark, thread-like structures</li>
+          <li>Never moves or walks — it spawns and stays stationary</li>
+          <li>Only the threads move: ambient drift → a single thread extending rapidly → shape-shifting → illumination</li>
+        </ul>
+        <p>What the threads represent is still undecided — the single biggest open symbolic question in the project (§8).</p>
+      </div>
+      <div class="char-card voice">
+        <span class="role">Anima — the channel</span>
+        <h3>The Voice</h3>
+        <p>A soft female voice, disembodied, speaking in second person ("you") throughout the score.</p>
+        <p>Several songs shift perspective mid-track — verse to chorus, sometimes moving entirely into second person — to enact the ego → anima shift musically (§7).</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="themes">
+    <span class="eyebrow">04</span>
+    <h2>Themes</h2>
+    <ul class="plain">
+      <li>Inaction and hesitation as quiet manifestations of doubt</li>
+      <li>Fear of commitment as the death of possibility</li>
+      <li>Fear of time passing, and regret</li>
+      <li>Retreat from the burden of expectation and productivity</li>
+      <li>Acceptance: however broken and imperfect the world is, it must be accepted as reality — the line that leads into the Whole / Fragment / Channel triad in §2</li>
+    </ul>
+  </section>
+
+  <section id="audience">
+    <span class="eyebrow">05</span>
+    <h2>Intended Audience Effect</h2>
+    <p class="pull">Curiosity and anticipation — the audience should keep leaning forward, unsure what The Horse is, what it wants, and what it means to the human.</p>
+  </section>
+
+  <section id="music">
+    <span class="eyebrow">06</span>
+    <h2>Music</h2>
+
+    <h3 style="font-size:1.05rem; margin-bottom:.9rem; color:var(--parchment-dim); font-family:var(--mono); text-transform:uppercase; letter-spacing:.06em; font-weight:500;">6.1 — Sonic palette key</h3>
+
+    <div class="key-group">
+      <h4>Melodic / harmonic layer</h4>
+      <div class="key-row"><span class="chip chip--melodic">STR</span><span class="name">String quartet</span><span class="desc">SWAM solo instruments — dry, close-mic'd, unusually expressive portamento in melancholic passages</span></div>
+      <div class="key-row"><span class="chip chip--melodic">AGTR</span><span class="name">Acoustic guitar</span><span class="desc">Finger-picked and/or strummed</span></div>
+      <div class="key-row"><span class="chip chip--melodic">SLIDE</span><span class="name">Electric slide guitar</span><span class="desc">Clean tone; bending accents and supporting melodies; occasionally doubles the violin line</span></div>
+      <div class="key-row"><span class="chip chip--melodic">FLUTE</span><span class="name">Flute</span><span class="desc">Embellishments, doubling, occasional melody</span></div>
+    </div>
+
+    <div class="key-group">
+      <h4>Rhythm layer</h4>
+      <div class="key-row"><span class="chip chip--rhythm">PERC</span><span class="name">Core rhythm bed</span><span class="desc">Big/deep bass drum + filtered snare + clap — the backbone in driving sections; individual tracks add taiko/toms, shaker/cabasa, or foley on top</span></div>
+      <div class="key-row"><span class="chip chip--rhythm">CBD</span><span class="name">Cinematic bass drum</span><span class="desc">A deep, filtered bass drum used alone as an atmospheric pulse — distinct from the fuller PERC bed</span></div>
+      <div class="key-row"><span class="chip chip--rhythm">SUB</span><span class="name">Sub bass</span><span class="desc">Programmed in Serum 2</span></div>
+    </div>
+
+    <div class="key-group">
+      <h4>Vocal layer</h4>
+      <div class="key-row"><span class="chip chip--vox-f">FVOX</span><span class="name">Female vocal</span><span class="desc">The Voice (§3) — lead or harmony, varies by track</span></div>
+      <div class="key-row"><span class="chip chip--vox-m">MVOX</span><span class="name">Male vocal</span><span class="desc">Grounded, expressive, sometimes understated</span></div>
+    </div>
+
+    <div class="key-group">
+      <h4>Motif</h4>
+      <div class="key-row"><span class="chip chip--motif">TRUMPET</span><span class="name">Trumpet calls</span><span class="desc">Recurring brass motif; several instances still marked "possible"</span></div>
+    </div>
+
+    <div class="key-group">
+      <h4>Harmonic technique</h4>
+      <div class="key-row"><span class="chip chip--technique">AUG</span><span class="name">Augmented harmony</span><span class="desc">Slow modulation through augmented chords — named for The Trees, hearts But No Love, and Pleasant Valley, but described as a language across the whole score</span></div>
+    </div>
+
+    <div class="prod-note">
+      <h4>Global production notes</h4>
+      <ul class="plain">
+        <li>Vocal harmonies used richly, especially in choruses, whenever FVOX and MVOX combine</li>
+        <li>Minimal delay throughout (slapback only)</li>
+        <li>Minimal reverb, reserved for deliberate atmospheric moments</li>
+      </ul>
+    </div>
+
+    <h3 class="track-note" style="font-size:1.05rem; margin-bottom:.4rem; color:var(--parchment-dim); font-family:var(--mono); text-transform:uppercase; letter-spacing:.06em; font-weight:500;">6.2 — Track list <span style="color:var(--parchment-faint); text-transform:none; letter-spacing:0;">(not yet sequenced)</span></h3>
+
+    <div class="track-grid">
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">01</span><span class="track-title">Nothing Is Strange</span></div>
+        <div class="track-mood">Eerie, atmospheric, epic</div>
+        <div class="track-meta"><span class="tag">Female voice throughout</span><span class="tag">Rubato — no tempo lock</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">AGTR</span><span class="chip chip--melodic">STR</span><span class="chip chip--rhythm">CBD</span><span class="chip chip--rhythm">SUB</span><span class="chip chip--motif">TRUMPET</span>
+        </div>
+        <div class="track-distinct"><ul><li>Drone under verse 2, adding octaves</li><li>Outdoor ambience (wind, air) through the verses</li></ul></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">02</span><span class="track-title">Soon Forgotten Dream</span></div>
+        <div class="track-mood">Reflective, melancholic, dreamlike, high-contrast</div>
+        <div class="track-meta"><span class="tag">Male verse → female chorus</span><span class="tag">Tempo-locked</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">STR</span><span class="chip chip--melodic">AGTR</span><span class="chip chip--vox-m">MVOX</span><span class="chip chip--vox-f">FVOX</span><span class="chip chip--rhythm">PERC</span><span class="chip chip--melodic">SLIDE</span>
+        </div>
+        <div class="track-distinct"><p>Euphoric post-chorus instrumental led by slide guitar; PERC here adds taiko/toms and cabasa.</p></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">03</span><span class="track-title">The Trees</span></div>
+        <div class="track-mood">Haunting, melancholic, dreamlike, high-contrast</div>
+        <div class="track-meta"><span class="tag">Male verse → female chorus</span><span class="tag">Rubato intro, then locked</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">AGTR</span><span class="chip chip--vox-m">MVOX</span><span class="chip chip--vox-f">FVOX</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--rhythm">PERC</span><span class="chip chip--rhythm">SUB</span><span class="chip chip--melodic">STR</span><span class="chip chip--technique">AUG</span>
+        </div>
+        <div class="track-distinct"><ul><li>Modulates up a fifth in the final bridge before the last chorus</li><li>Bass drops an octave at the same moment — echoes Track 7</li></ul></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">04</span><span class="track-title">Hearts, But No Love</span></div>
+        <div class="track-mood">Yearning, searching, constantly evolving</div>
+        <div class="track-meta"><span class="tag">Female voice throughout</span><span class="tag">Fluid tempo until drums</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">STR</span><span class="chip chip--rhythm">SUB</span><span class="chip chip--vox-f">FVOX</span><span class="chip chip--rhythm">PERC</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--technique">AUG</span>
+        </div>
+        <div class="track-distinct"><ul><li>Opens with one exposed voice, gradually layering harmonies</li><li>Three key centers via descending augmented progressions</li><li>Large instrumental break (violin or flute) before aggressive drums enter the final third</li></ul></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">05</span><span class="track-title">Pleasant Valley</span></div>
+        <div class="track-mood">Self-deception and hypnosis; dreamlike but dry, textured</div>
+        <div class="track-meta"><span class="tag">Female voice + sparse male harmony</span><span class="tag">Fully rubato</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">STR</span><span class="chip chip--melodic">AGTR</span><span class="chip chip--melodic">FLUTE</span><span class="chip chip--vox-f">FVOX</span><span class="chip chip--vox-m">MVOX</span><span class="chip chip--rhythm">SUB</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--motif">TRUMPET*</span><span class="chip chip--technique">AUG</span>
+        </div>
+        <div class="track-distinct"><ul><li>Sparse, accent-only drums (kit unspecified)</li><li>Sweeping descending harmonic progressions build to an almost euphoric bliss</li></ul><p style="margin-top:.5rem; font-size:.78rem;">*trumpet marked "possible"</p></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">06</span><span class="track-title">Endless Ocean</span></div>
+        <div class="track-mood">Maritime, hypnotic, in 3/4</div>
+        <div class="track-meta"><span class="tag">Female voice after intro</span><span class="tag">Slight rubato push/pull</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">AGTR</span><span class="chip chip--melodic">STR</span><span class="chip chip--rhythm">CBD</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--melodic">FLUTE</span><span class="chip chip--motif">TRUMPET*</span>
+        </div>
+        <div class="track-distinct"><ul><li>Only track in 3/4 time</li><li>Opens on swelling strings before stripping to guitar + voice</li><li>Ends in a large "restless water" section with the full arrangement</li></ul></div>
+      </div>
+
+      <div class="track-card revelation">
+        <div class="track-head"><span class="track-num">07</span><span class="track-title">TBD Song 7<span class="flag">Revelation track</span></span></div>
+        <div class="track-mood">Lyrics and arrangement not yet written</div>
+        <div class="track-meta"><span class="tag">Female voice throughout</span><span class="tag">Likely palette</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">AGTR</span><span class="chip chip--melodic">STR</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--melodic">FLUTE</span><span class="chip chip--motif">TRUMPET</span>
+        </div>
+        <div class="track-distinct"><ul><li>Solo cello modulating bridge — transcendence, slide + strings underneath</li><li>Triumphant outro a fifth higher than the first half — echoes Track 3</li><li>Dense orchestral hits, trumpet calls opening each phrase</li></ul></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">08</span><span class="track-title">String Character Instrumental 1</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">STR</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--melodic">FLUTE</span>
+        </div>
+        <div class="track-distinct"><p>No further detail yet.</p></div>
+      </div>
+
+      <div class="track-card">
+        <div class="track-head"><span class="track-num">09</span><span class="track-title">String Action Instrumental 2</span></div>
+        <div class="track-palette">
+          <span class="chip chip--melodic">STR</span><span class="chip chip--melodic">SLIDE</span><span class="chip chip--melodic">FLUTE</span>
+        </div>
+        <div class="track-distinct"><p>Identical palette to Track 8 — see §7 for the gap that leaves.</p></div>
+      </div>
+
+      <div class="track-card tbd">
+        <div class="track-head"><span class="track-num">10–12</span><span class="track-title">Instrumentals 3–5</span></div>
+        <div class="track-distinct"><p>Not yet developed — to be scored once story needs are clearer.</p></div>
+      </div>
+
+    </div>
+  </section>
+
+  <section id="patterns">
+    <span class="eyebrow">07</span>
+    <h2>Cross-Element Patterns</h2>
+    <p class="lede">A few things that aren't stated outright but show up once the elements are lined up side by side.</p>
+
+    <div class="pattern"><span class="pnum">1</span><p><strong>Vocal perspective mirrors the Self/ego/anima system.</strong> Male-verse → female-chorus tracks (<em>Soon Forgotten Dream</em>, <em>The Trees</em>) enact the ego→anima handoff from §2 within a single song. Tracks that stay in the female voice throughout read as full excursions into the anima/Voice perspective rather than the grounded human one.</p></div>
+
+    <div class="pattern"><span class="pnum">2</span><p><strong>Percussion style tracks tempo treatment, not just mood.</strong> The rubato tracks either skip drums entirely or use only the sparse CBD device — never the fuller PERC kit. The tempo-locked/beat-driven tracks are the only ones using it. Worth deciding if that's a rule to keep applying as Instrumentals 3–5 get written.</p></div>
+
+    <div class="pattern"><span class="pnum">3</span><p><strong>A "modulate up a fifth" gesture marks two of the score's most pivotal moments</strong> — the final chorus of <em>The Trees</em> and the triumphant outro of <em>TBD Song 7</em>, the film's designated revelation track. Both also drop the bass an octave at the same moment. A strong candidate for a deliberate "transcendence" motif.</p></div>
+
+    <div class="pattern"><span class="pnum">4</span><p><strong>Tracks 8 and 9 currently have identical instrumentation</strong> — strings, slide guitar, flute — distinguished only by title, "Character" vs. "Action." Nothing in the arrangement notes marks that difference yet.</p></div>
+
+    <div class="pattern"><span class="pnum">5</span><p><strong>Trumpet calls form a loose, inconsistent motif.</strong> Confirmed in <em>Nothing Is Strange</em>, marked "possible" in <em>Pleasant Valley</em> and <em>Endless Ocean</em>, used most aggressively in <em>TBD Song 7</em>. Formalizing where it does and doesn't appear could do quiet narrative work for free.</p></div>
+  </section>
+
+  <section id="open-questions">
+    <span class="eyebrow">08</span>
+    <h2>Open Questions &amp; Next Steps</h2>
+    <p class="lede">Consolidated from the original "Open Narrative Questions" and "Areas for Expansion" lists, which overlapped.</p>
+
+    <div class="oq-group">
+      <h4>Story &amp; structure</h4>
+      <div class="oq-item"><span class="oq-box"></span><p>What's the most compelling hero's journey given the visual concept and the emotional arc of the songs — or should the film resist that structure and lean into abstraction instead?</p></div>
+      <div class="oq-item"><span class="oq-box"></span><p>How linear vs. abstract should the narrative be — mysterious enough to invite interpretation without tipping into esoteric or emotionally inaccessible?</p></div>
+    </div>
+
+    <div class="oq-group">
+      <h4>The Horse &amp; symbolism</h4>
+      <div class="oq-item"><span class="oq-box"></span><p>What the thread structures actually represent — the project's single largest open symbolic question</p></div>
+      <div class="oq-item"><span class="oq-box"></span><p>How much of The Horse's true nature to reveal vs. leave unresolved, and where that ambiguity should be strongest through the film</p></div>
+    </div>
+
+    <div class="oq-group">
+      <h4>Character</h4>
+      <div class="oq-item"><span class="oq-box"></span><p>Full development of the human's emotional arc — the sequence of realizations, and the nature of the final action or revelation</p></div>
+    </div>
+
+    <div class="oq-group">
+      <h4>Production</h4>
+      <div class="oq-item"><span class="oq-box"></span><p>Production schedule and timeline, and how to break it up</p></div>
+      <div class="oq-item"><span class="oq-box"></span><p>How the crowdfunding will work, and what's needed to sell the project</p></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <span class="mark">— The Horse remains —</span>
+</footer>
+
+</body>
+</html>
